@@ -18,79 +18,73 @@ void main(List<String> arguments) {
   line = stdin.readLineSync(encoding: utf8);
   var altura = double.parse(line ?? "0");
   var person = Person(nome, peso, altura);
-  calculation(person);
+  var bmiResult = calculation(person);
+  var conclusion = getCategory(bmiResult);
+
+  var resultMsg = buildResultImc(conclusion);
+  print("${person.name} aqui está seu resultado:");
+  print("--> $resultMsg <--");
 }
 
-void calculation(Person person) {
-  if (person.weight == 0 || person.height == 0) {
-    print("Dados inválidos!");
-    exit(0);
-  }
-  var result = person.weight / (person.height * person.height);
-  print("Carregando...");
-
-  getCategory(result, person.name);
-}
-
-void getCategory(double result, String namePerson) {
-  BmiCategory? category;
-  if (result < 16) {
-    category = BmiCategory.SEVERE_THINNESS;
-  }
-  if (result >= 16 && result < 17) {
-    category = BmiCategory.MODERATE_THINNESS;
-  }
-  if (result >= 17 && result < 18.5) {
-    category = BmiCategory.LIGHT_THINNESS;
-  }
-  if (result >= 18.5 && result < 25) {
-    category = BmiCategory.HEALTHY;
-  }
-  if (result >= 25 && result < 30) {
-    category = BmiCategory.OVERWEIGHT;
-  }
-  if (result >= 30 && result < 35) {
-    category = BmiCategory.GRADE_I_OBESITY;
-  }
-  if (result >= 35 && result < 40) {
-    category = BmiCategory.SEVERE_GRADE_II_OBESITY;
-  }
-  if (result > 40) {
-    category = BmiCategory.MORBID_GRADE_III_OBESITY;
-  }
-  print("$namePerson aqui está seu resultado:");
-
-  buildResultImc(category!);
-}
-
-void buildResultImc(BmiCategory conclusion) {
+String buildResultImc(BmiCategory conclusion) {
   switch (conclusion) {
     case BmiCategory.SEVERE_THINNESS:
-      print("--> Magreza Grave <--");
-      break;
+      return "Magreza Grave";
     case BmiCategory.MODERATE_THINNESS:
-      print("--> Magreza Moderada <--");
-      break;
+      return "Magreza Moderada";
     case BmiCategory.LIGHT_THINNESS:
-      print("--> Magreza Leve <--");
-      break;
+      return "Magreza Leve";
     case BmiCategory.HEALTHY:
-      print("--> Saudável <--");
-      break;
+      return "Saudável";
     case BmiCategory.OVERWEIGHT:
-      print("--> Sobrepeso <--");
-      break;
+      return "Sobrepeso";
     case BmiCategory.GRADE_I_OBESITY:
-      print("--> Obesidade Grau I <--");
-      break;
+      return "Obesidade Grau I";
     case BmiCategory.SEVERE_GRADE_II_OBESITY:
-      print("--> Obesidade Grau II (severa) <--");
-      break;
+      return "Obesidade Grau II (severa)";
     case BmiCategory.MORBID_GRADE_III_OBESITY:
-      print("--> Obesidade Grau III (morbida) <--");
-      break;
+      return "Obesidade Grau III (morbida)";
     default:
       print("Erro ao calular resultado!");
       exit(0);
   }
+}
+
+BmiCategory getCategory(double bmiResult) {
+  late BmiCategory category;
+  if (bmiResult < 16) {
+    category = BmiCategory.SEVERE_THINNESS;
+  }
+  if (bmiResult >= 16 && bmiResult < 17) {
+    category = BmiCategory.MODERATE_THINNESS;
+  }
+  if (bmiResult >= 17 && bmiResult < 18.5) {
+    category = BmiCategory.LIGHT_THINNESS;
+  }
+  if (bmiResult >= 18.5 && bmiResult < 25) {
+    category = BmiCategory.HEALTHY;
+  }
+  if (bmiResult >= 25 && bmiResult < 30) {
+    category = BmiCategory.OVERWEIGHT;
+  }
+  if (bmiResult >= 30 && bmiResult < 35) {
+    category = BmiCategory.GRADE_I_OBESITY;
+  }
+  if (bmiResult >= 35 && bmiResult < 40) {
+    category = BmiCategory.SEVERE_GRADE_II_OBESITY;
+  }
+  if (bmiResult > 40) {
+    category = BmiCategory.MORBID_GRADE_III_OBESITY;
+  }
+  return category;
+}
+
+double calculation(Person person) {
+  if (person.weight == 0 || person.height == 0) {
+    print("Dados inválidos!");
+    throw ArgumentError("O peso/altura não pode ser zero");
+  }
+  var result = person.weight / (person.height * person.height);
+  print("Carregando...");
+  return result;
 }
